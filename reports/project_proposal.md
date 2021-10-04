@@ -10,6 +10,7 @@ In our exploration, we will replicate some of the experiments that Albert, Jeong
 Once we have replicated these results, we will look at applying the implementation to a model we downloaded for an electrical grid in order to analyze the electrical grid’s robustness to both random failure (as if during a bad storm) and attacks on that grid. In this exploration, we also hope to investigate what would happen if instead of just attacking nodes, edges started to randomly fail.  We hope that this would give us a better idea of how the grid would respond to environmental disasters that are more likely to affect the ability for a node to transmit power to another node.
 
 Here we can take a look at the results from Albert, Jeong, and Barabasi's experiments and what our replication results will hopefully resemble (but maybe in a slightly clearer representation).
+
 ![pathlengthReplication](figures/projectproposal2.png)
 
 **Figure 1:** Path length replication as nodes are removed randomly and targeted.
