@@ -73,6 +73,8 @@ Another cause of concern or rather a question that we pose for further explorati
 
 Finally, we are concerned that we haven't explored how to choose which model is best to follow when trying to design a system and we wonder if we have provided enough information given just these few models to determine which graph to choose. In the future, it would be interesting to explore more complex models and how they respond to these attacks. It's possible that there are better options that still achieve the functionality that users are looking for when designing networks. For others exploring this field, we would challenge you to explore different models and think about how to model graphs through a lens of robustness.
 
+## Our Next Steps
+Will and I plan on testing different networks such as an electrical grid and we hope to look into potentially exploring another type of model if we end up having the time to do so. We feel confident in our results thus far, but we will also be checking our experiments to see if we can find where the discrepency between our results and the paper we followed's experiments lies.
 
 ## Annotated Bibliography
 [Error and Attack Tolerance of Complex Networks](https://www.nature.com/articles/35019019.pdf?origin=ppub)  
