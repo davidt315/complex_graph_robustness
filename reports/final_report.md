@@ -18,7 +18,7 @@ After implementing these tools, we then expand our types of attacks to include r
 
 ## Results
 
-### Average Shorest Path Length
+### Average Shortest Path Length
 The following figure shows the results from Albert, Jeong, and Barabasi's experiment on exponential graphs (ER) and scale-free graphs (HK). The x-axis reflects the percentage of the nodes removed during the attack while the y-axis shows the diameter, or average shortest path length between two randomly selected nodes, of the graphs. For both types of graphs, the authors used graphs with 10,000 nodes and 20,000 edges. In Figure 1, the authors of the original paper plotted the average path length between any two nodes as the ratio of removed nodes to starting nodes increased. 
 
 ![pathlengthReplication](figures/projectproposal2.png)
@@ -27,9 +27,15 @@ The following figure shows the results from Albert, Jeong, and Barabasi's experi
 
 The next figure shows our implementation of the authors' work with the addition of random edge removal. 
 
-![pathLengthReplicationUs](figures/fig2.jpg)
+![pathLengthReplication](figures/fig1.jpg)
 
-**Figure 2:** Replication of average path length graph shown in Figure 1. Nodes are removed randomly and targeted with a WS and an ER graph both with 10,000 nodes and 20,000 edges. The WS probability of rewiring is 0.05. In our replication, we also included a random edge attack.
+**Figure 2:** Replication of average path length graph shown in Figure 1. Nodes are removed randomly and targeted with a HK and an ER graph both with 10,000 nodes and 20,000 edges. The HK probability of a triangle is 0.5. In our replication, we also included a random edge attack.
+
+![pathLengthReplication](figures/fig2.jpg)
+
+**Figure 3:** Replication of average path length graph shown in Figure 1 using road network and electrical grid data.
+
+
 
 The general characteristics of the graphs hold. The exponential (ER) graph shows little difference in average path length when under a random or targeted attack, although our results suggest that the random attack on a fully random graph is slightly more robust than a targeted attack on the same graph while the authors' results suggest they are equally robust. However, this difference is miniscule and the general trend for the ER random graph demonstrates that the average path length should change minimally with a small percentage of the nodes removed. Furthermore, the difference between random edge removal and random node removal is negligable; the random edge removal seems to hold the same results as the random node removal in the ER graph. 
 
@@ -37,10 +43,6 @@ On the other hand, the HK model we used to model the scale free graph seems to r
 
 To see a comparison to real-world data, we also analyzed the average shortest path length of the Power Grid dataset and the Minnesota road dataset.
 <!-- To better reflect this difference, we plotted WS and ER graphs in Figure 3 that have the same number of nodes and edges as the Facebook and Electrical Grid data respectively. -->
-
-![pathLengthfb](figures/fig3.jpg)
-
-**Figure 3:** Path Length characteristics of the Power Grid and Minnesota Road dataset. The Electrical Grid and respective ER graph have 4,941 nodes and 6,594 edges.
 
 In the Facebook model, a random attack with small percetages of the nodes being removed has almost no affect on the path length while the targeted attack nearly doubles the average path length in the first round followed by an overall steeper slope. The removal of the few "most popular" people in this graph model doubles the number of people you are away from any other person, so keep your popular friends safe! 
 
@@ -55,28 +57,31 @@ Figure 4 is a little difficult to interpret. Essentially, the results from Alber
 
 The average isolated cluster size differs even more when comparing to the paper's original graph. For an exponential graph, the paper shows a spike in isolated cluster sizes around the critical point in which the largest cluster size falls rapidly. Under a random attack, we do not see a spike in isolated cluster sizes. However, we also don't see a critical point within the range plotted. This could suggest that this spike does occur, but not in this sample of data collected. There is a spike in isolated cluster sizes when an exponential graph experiences targeted attacks: also lining up with the critical point where cluser size drops. This relationship also holds true for the scale-free graph under a targeted attack. According the paper, the scale-free graph should not see a spike in isoalted clusters during a random attack because there is no crictical point at which the largest cluster size falls. Because we see this critical point in our own data, we also see a spike in isolated clusters. One major difference between the exponential and small world models is that the exponential models often have clusters that end up having just a single isolated node or many of them as the removal continues. On the other hand, the average isolated cluster size appears to grow until a certain point (or spike) in the small world model. This growth implies that the small world model ends up splitting into many clusters of a much larger size than the random graph so those clusters could stay connected where the random graph may isolate individual nodes much more often. In a cellular communication network for instance, it may be advantageous to have these smaller clusters appear as most people don't need to call outside of their immediate area as failures occur. While the random graph appears much more robust, there are advantages to both models depending on what the network is attempting to optimize.
 
-![clusterReplicationUs](figures/fig5.jpg)
+![clusterReplication](figures/fig3.jpg)
 
-**Figure 5:** Average isolated cluster size and relative cluster size plotted for our ER and WS graphs with nodes=10,000 and edges=20,000 with probability of rewiring = 0.05 in the WS graph.
+**Figure 5:** Relative cluster size plotted for our ER and SF graphs with nodes=10,000 and edges=20,000 with probability of triangle = 0.5 in the SF graph.
 
 Again, we used the Facebook dataset to compare our results with a real-world small world graph. The characteristics of the Facebook data closer resemble the results we produced rather than the expected results from paper.
 
-![clusterReplicationfb](figures/fig6.jpg)
+![clusterReplication](figures/fig4.jpg)
 
-**Figure 6:** Average isolated cluster size and relative cluster size plotted for Facebook Electrical Grid data. WS and ER graphs are also plotted with the same node and edge count as the Facebook and Electrical Grid data respectively.
+**Figure 6:** Relative cluster size plotted for the road network and electrical grid graphs.
 
-### Random Edge Removal
+### Isolated Cluster Size
+
+
+
+![isoClusterReplication](figures/fig5.jpg) 
+
+**Figure 7:** Average isolated cluster size plotted for our ER and SF graphs with nodes=10,000 and edges=20,000 with probability of triangle = 0.5 in the SF graph.
+
+![isoClusterReplication](figures/fig6.jpg) 
+
+**Figure 8:** Average isolated cluster size plotted for the road network and electrical grid graphs.
+
 Beyond just random node removal, we implemented a random edge removal. The following figure shows our exponential and random graphs' response to this type of attack. We also plotted the response of these graphs to all of the attacks mentioned previously. The randome edge removal behaves fairly similar to the random node attack. Following the pattern of random node removal, the random graph appears to be the most robust to any type of attack on the system. 
 
-![edgeRemoval](figures/fig7.jpg) 
-
-**Figure 7:** All three types of attacks plotted against all three types of robustness characteristics. ER and WS graphs with 10,000 nodes and 20,000 edges were used.
-
 Again, we plotted a random edge attack on the Facebook dataset to see how a real-world graph is effected by the this type of attack. As anticipated, we observed that the Facebook dataset acts very similarly to the Watts-Strogatz graph. The issue of the Facebook model's larger degree distribution doesn't show in this attack though since the removal is random and not targeted.
-
-![edgeRemovalfb](figures/fig8.jpg)
-
-**Figure 8:** All three types of attacks plotted against all three types of robustness characteristics for the Facebook and Electrical Grid data. WS and ER graphs are also plotted with the same node and edge count as the Facebook and Electrical Grid data respectively.
  
 
 ## Causes of Concern
