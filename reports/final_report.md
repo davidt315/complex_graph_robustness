@@ -2,18 +2,28 @@
 ### Will Fairman and David Tarazi
 
 ## Abstract
-By comparing different graph models and their properties in response to random attacks or failures, we can determine which types of models would be best for different applications. For example, in the design of an electrical grid, maintaining a connected graph representing the electrical grid is likely more important than the shortest path length between any two nodes. Alternatively, in the design of a road network, the shortest path between any two nodes representing cities or locations in a city is probably an important consideration, especially if the edges are weighted and there can be an analysis of how long it would take to traverse from one node to another.
+Albert, Jeong, and Barabasi explore the robustness of different complex graphs by looking at two specific types of failure: removing random nodes and systematically removing nodes with the highest degree. With small rates of failure, the authors use the average shortest path length as a characteristic of robustness. With high rates of failure, where a graph is likely to become disconnected, the authors instead associate robustness with the percentage of nodes that are in the largest connected cluster, representing the percentage of nodes that are still reachable. To expand upon the paper, we implemented random edge removal as another way to attack these complex graphs and evaluate their robustness.  While the authors specifically compared the Erdos and Renyi (ER) random graph model and the Watts and Strogatz (WS) small world model, we expanded the robustness analysis by looking at two real-world data sets: the facebook social network (a known small-world graph) and a graph representing the power grid of the Western United States (IS THIS RIGHT?).
 
-Albert, Jeong, and Barabasi explore the robustness of different complex graphs by looking at two specific types of failure: removing random nodes and systematically removing nodes with the highest degree. With small rates of failure, the authors use the average shortest path length as a characteristic of robustness. With high rates of failure, where a graph is likely to become disconnected, the authors instead associate robustness with the percentage of nodes that are in the largest connected cluster, representing the percentage of nodes that are still reachable within that large cluster. This paper specifically compared the Erdos and Renyi (ER) random graph model and the Watts and Strogatz (WS) small world model. We have generated both types of graphs using networkX and replicated their experiments to see similar results. We later implemented random edge removal as another way to attack these complex graphs and evaluate their robustness. While the Watts-Strogatz model is intended to represent a small world, we tested this method on Facebook friend data to understand if the degree distribution would have a large impact on the robustness in a graph. 
 
-The results suggest that random graphs like the ER model are more robust than small world graphs like the WS model in most, but not all aspects. We noticed that with small fractions of failures or targets, the random graph is just as robust to targeted node attacks and random node and edge attacks. However, the random graphs tend to lose the connected property earlier than the small world graphs. At scale, we noticed that the relative size of the largest cluster for random graphs stays much higher than the small world graphs with random deletion of nodes and edges, but with targeted attacks, we observe that the random and small world graphs both tend to have a critical failure point where the largest cluster size decreases rapidly at around 20-30% of total node removal. We will investigate the meaning of these results in the "Results" section. Furthermore, when applying the attacks to the Facebook model, we observe that the nodes with a significantly high degree fail early and the robustness of the graph is less than both other models we analyzed. While interpreting these results, we saw slight differences in our results than we did in Albert, Jeong, and Barabasi's results which we will dive into in the "Causes of Concern" section. 
+
+## Introduction
+By comparing different graph models and their properties in response to random attacks or failures, we can determine which types of models would be best for different applications. For example, in the design of an electrical grid, maintaining a connected graph is more important than the shortest path length between any two nodes. Alternatively, in the design of a road network, the shortest path between any two nodes representing cities or locations in a city is probably an important consideration, especially if the edges are weighted and there can be an analysis of how long it would take to traverse from one node to another.
+
+In an attempt to draw failure characteristics from real-world graphs, we used the Facebook Social Network data to represent a small-world graph and data from a Power grid which we will later associate with an exponential, Erdos Renyi, graph. 
+
+ unlike the WS model, the degree distribution is long-tailed and has a much greater range.
+
+ ```
+ talk about how the Facebook and Power Grid data compare to the WS and ER graphs?
+ 
+ ```
+
+The results suggest that random graphs like the ER model are more robust than small world graphs like the WS model in most, but not all aspects. We noticed that with small fractions of failures or targets, the random graph is just as robust to targeted node attacks and random node and edge attacks. However, the random graphs tend to lose the connected property earlier than the small world graphs. At scale, we noticed that the relative size of the largest cluster for random graphs stays much higher than the small world graphs with random deletion of nodes and edges, but with targeted attacks, we observe that the random and small world graphs both tend to have a critical failure point where the largest cluster size decreases rapidly at around 20-30% of total node removal. Furthermore, when applying the attacks to the Facebook model, we observe that the nodes with a significantly high degree fail early and the robustness of the graph is less than both other models we analyzed.
 
 ## Experiment
-In our exploration, we will replicate some of the experiments that Albert, Jeong, and Barabasi conducted while extending this application to a real world example. In our replication, we will implement two graphs: a WS Scale Free Network and an ER Exponential Network following the original authors' experiment guidelines. We then will conduct a random attack on the nodes as well as a targeted attack on the most connected nodes. When analyzing these, we will look at the average shortest path length for both graphs as we remove nodes. We will also evaluate the size of the largest cluster along with the average size of the isolated clusters as the graph disconnects over enough failures/attacks. We then attempted to investigate our observation that there is seemingly a critical point in the fraction of nodes or edges deleted where the graph separates very quickly.
+In our exploration, we will replicate some of the experiments that Albert, Jeong, and Barabasi conducted while extending this application to a real world example. In our replication, we will implement two graphs: a Watts and Strogatz (WS) model that the authors refer to as scale free and a Erdos and Renyi (ER) random model which the authors refer to as an exponential graph. For both of these models, we use a node and edge count the authors use in the paper: 10,000 nodes, 20,000 edges. When analyzing these, we will look at the average shortest path length for both graphs as we remove nodes. We will also evaluate the size of the largest cluster along with the average size of the isolated clusters as the graph disconnects over enough failures/attacks. 
 
-After implementing these tools, we then expand our types of attacks to include random edge removal. This investigation is interesting for the potential applications into real world models. For example, if a power line is severed during a storm, power may be cut off between a town and a power substation. In this case, removing a node (representing a substation) would not properly reflect this type of failure. 
-
-Once we have expanded our analysis tools, we will look at a model we downloaded for an electrical grid in order to analyze the electrical grid’s robustness to both random failure (as if during a bad storm) and attacks on that grid. (In Progress)
+After implementing these tools, we then expand our types of attacks to include random edge removal. This investigation is interesting for the potential applications into real world models. For example, if a power line is severed during a storm, power may be cut off between a town and a power substation. In this case, removing a node (representing a substation) would not properly reflect this type of failure. Once we have expanded our analysis tools, we will look at a model we downloaded for an electrical grid in order to analyze the electrical grid’s robustness to both random failure (as if during a bad storm) and attacks on that grid. Throughout the experiment, we also test the robustness of the a Facebook data set: a real-world representation of a small-world graph.
 
 ## Results
 
@@ -22,19 +32,26 @@ The following figure shows the results from Albert, Jeong, and Barabasi's experi
 
 ![pathlengthReplication](figures/projectproposal2.png)
 
-**Figure 1:** Paper's Diagram showing path length as nodes are removed randomly and targeted.
+**Figure 1:** Graph from Albert, R., Jeong, H. & Barabási, AL that shows average path length of exponential (ER) and scale-free (WS) networks. The x-axis is the fraction of nodes removed. The y-axis is the average shortest path length. Two types of attacks are applied. The first is a random node removal labeled as "Failure" and the second is a targeted node removal labeled "Attack".
 
 The next figure shows our implementation of the authors' work. While our shortest path lengths are offset by about 10, the general characteristics of the graphs hold. The exponential (ER) graph shows little difference when under a random or targeted attack. However, the scale-free graph's (WS) path lengths increase at a much faster rate when nodes with a larger degree are removed.
 
 ![pathLengthReplicationUs](figures/fig2.jpg)
 
-**Figure 2:** Path length replication as nodes are removed randomly and targeted with a WS and an ER graph both with 10,000 nodes and 20,000 edges. The WS probability of rewiring is 0.05.
+**Figure 2:** Replication of average path length graph shown in Figure 1. Nodes are removed randomly and targeted with a WS and an ER graph both with 10,000 nodes and 20,000 edges. The WS probability of rewiring is 0.05.
 
-Figures 1 and 2 suggest that when minimal attacks or failures occur, random graphs tend to be more resilient and hold their average shortest path length between any two nodes when compared to a small world graph model. AlthoughHowever this seems promising, there is one flaw that isn't represented well on the plots in Figures 1 and 2. The random graph generally holds the average shortest path length, but it is more likely to have a failure that results in a node losing connection to the main cluster at a lower percentage of removed nodes. To see a comparison to real-world data, we also plotted a Facebook dataset representing friendship connections. This dataset is an example of a small-world graph with 4,039 nodes and 88,234 edges and unlike the WS model, the degree distribution is long-tailed and has a much greater range. As you can see below, the starting shortest path length is much smaller than our previous examples. This is also attributed to the much larger edge to node ratio in the Facebook data. The Facebook graph, however, still reflects most of the characteristics of our original scale-free graph. A random attack has almost no affect on the path length while the targeted attack nearly doubles the average path length in the first round followed by an overall steeper slope. The removal of the few "most popular" people in this graph model doubles the number of people you are away from any other person, so keep your popular friends safe! 
+Figures 1 and 2 suggest that when minimal attacks or failures occur, random graphs tend to be more resilient and hold their average shortest path length between any two nodes when compared to a small world graph model. There is one flaw that isn't represented well in Figures 1 and 2. The random graph generally holds the average shortest path length, but it is more likely to have a failure that results in a node losing connection to the main cluster at a lower percentage of removed nodes. To see a comparison to real-world data, we also plotted the Facebook and Power Grid dataset. As you can see below, the starting shortest path length is much smaller than our previous examples. This is also attributed to the much larger edge to node ratio in the Facebook data. To better reflect this difference, we plotted WS and ER graphs in Figure 3 that have the same number of nodes and edges as the Facebook and Electrical Grid data respectively.
+
+ The Facebook graph, however, still reflects most of the characteristics of our original scale-free graph. A random attack has almost no affect on the path length while the targeted attack nearly doubles the average path length in the first round followed by an overall steeper slope. The removal of the few "most popular" people in this graph model doubles the number of people you are away from any other person, so keep your popular friends safe! 
+
+ ```
+ Talk about Electrical Grid Characteristics
+ 
+ ```
 
 ![pathLengthfb](figures/fig3.jpg)
 
-**Figure 3:** Path Length characteristic of a Facebook friends dataset with 4,039 nodes and 88,324 edges.
+**Figure 3:** Path Length characteristics our Facebook and Power Grid dataset. The Facebook data and respective WS graph have 4,039 nodes and 88,324 edges respectively. The Electrical Grid and respective ER graph have 4,941 nodes and 6,594 edges.
 
 
 ### Cluster Size
@@ -56,20 +73,20 @@ Again, we used the Facebook dataset to compare our results with a real-world sma
 
 ![clusterReplicationfb](figures/fig6.jpg)
 
-**Figure 6:**
+**Figure 6:** Average isolated cluster size and relative cluster size plotted for Facebook Electrical Grid data. WS and ER graphs are also plotted with the same node and edge count as the Facebook and Electrical Grid data respectively.
 
 ### Random Edge Removal
 Beyond just random node removal, we implemented a random edge removal. The following figure shows our exponential and random graphs' response to this type of attack. We also plotted the response of these graphs to all of the attacks mentioned previously. The randome edge removal behaves fairly similar to the random node attack. Following the pattern of random node removal, the random graph appears to be the most robust to any type of attack on the system. 
 
 ![edgeRemoval](figures/fig7.jpg) 
 
-**Figure 7:**
+**Figure 7:** All three types of attacks plotted against all three types of robustness characteristics. ER and WS graphs with 10,000 nodes and 20,000 edges were used.
 
 Again, we plotted a random edge attack on the Facebook dataset to see how a real-world graph is effected by the this type of attack. As anticipated, we observed that the Facebook dataset acts very similarly to the Watts-Strogatz graph. The issue of the Facebook model's larger degree distribution doesn't show in this attack though since the removal is random and not targeted.
 
 ![edgeRemovalfb](figures/fig8.jpg)
 
-**Figure 8:** something
+**Figure 8:** All three types of attacks plotted against all three types of robustness characteristics for the Facebook and Electrical Grid data. WS and ER graphs are also plotted with the same node and edge count as the Facebook and Electrical Grid data respectively.
  
 
 ## Causes of Concern
