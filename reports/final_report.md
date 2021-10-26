@@ -110,3 +110,6 @@ Albert, R., Jeong, H. & Barabási, AL. Error and attack tolerance of complex net
 [Minnesota Road Network Model](https://networkrepository.com/road.php)
 >The Minnesota Road Network models the towns and major road connections between those towns.
 
+## Supporting Code
+View the code we used to generate the figures in this report with the following google collab link:
+https://colab.research.google.com/drive/1LihjSRifTlm8e0_04KoZv0Cg_IVat-0f?usp=sharing
